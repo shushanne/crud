@@ -1,0 +1,18 @@
+.TodoBuilder{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    width: 50%;
+    height: 550px ;
+    box-shadow: 0 0 15px #D8B5FF;
+    overflow: scroll;
+}
+
+.TodoBuilder::-webkit-scrollbar { 
+    width: 0 !important 
+}
+
+.Available{
+    padding: 50px;
+}

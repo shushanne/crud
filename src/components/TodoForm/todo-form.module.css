@@ -1,0 +1,20 @@
+.TodoForm {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    margin: 10px 0;
+}
+
+.Input{
+    padding: 10px;
+    margin: 10px;
+    border-image: linear-gradient(to right, #4568DC,#00B4DB);
+    border-image-slice: 1
+} 
+
+.Input[type=submit]{
+    background:#00B4DB ;
+    color: white ;
+}
