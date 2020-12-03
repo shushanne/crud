@@ -2,9 +2,10 @@ import axios from "axios";
 import { all, call, put, takeEvery } from "redux-saga/effects";
 
 
-const baseUrl = "https://todo.eachbase.com/api/ShushanArakelian/todos";
+// const baseUrl = "https://todo.eachbase.com/api/ShushanArakelian/todos";
+const baseUrl = "https://todo.eachbase.com/api/todos";
 
-function fetchTodos() {
+function fetchTodosApi() {
     return axios(baseUrl, {
         method: "GET",
         headers: { "Content-Type": "aplication/json" },
@@ -12,97 +13,94 @@ function fetchTodos() {
         .catch((error) => { throw error })
 }
 
-function* getTodos() {
+function* fetchTodos() {
     try {
-        const response = yield call(fetchTodos);
+        const response = yield call(fetchTodosApi);
         yield put({ type: "GET_TODOS_SUCCESS", todos: response })
     }
     catch (e) {
-        yield put({ message: e.message })
+        yield put({ rype: "GET_TODOS_FAILURE", message: e.message })
     }
 }
 
-function postTodo(title, description) {
-    return axios("baseUrl", {
+function createTodoApi(title, description) {
+    return axios(baseUrl, {
         method: "POST",
-        headers: { "Content-Type": "aplication/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(title, description)
     }).then(res => res.data)
         .catch((error) => { throw error })
 }
 
-
-function* addTodo() {
+function* createTodo({ title, description }) {
     try {
-        const response = yield call(postTodo);
-        yield put({ type: "POST_TODO_SUCCESS", todos: response })
-    }
-    catch (e) {
-        yield put({ message: e.message })
+        const addData = yield call(createTodoApi, title, description)
+        yield put({ type: "POST_TODO_REQUEST", addData })
+    } catch (e) {
+        return e.message
     }
 }
 
-function deleteTodo(id) {
-    return axios(`baseUrl${id}`, {
+function deleteTodoAPI(id) {
+    return axios(`${baseUrl}/${id}`, {
         method: "DELETE",
-        body: id
+        headers: { 'Content-Type': 'application/json' }
     }).then(res => res.data)
         .catch((error) => { throw error })
 }
 
-function* removeTodo() {
+function* deleteTodo({ id }) {
     try {
-        const response = yield call(deleteTodo);
-        yield put({ type: "DELETE_TODO_SUCCESS", todos: response })
-    }
-    catch (e) {
-        yield put({ message: e.message })
+        const deleteData = yield call(deleteTodoAPI, id)
+        yield put({ type: "DELETE_TODO_REQUEST", deleteData })
+    } catch (e) {
+        return e.message
     }
 }
 
-function editTodo(id) {
-    return axios(`baseUrl${id}`, {
-        method: "PUT",
-        body: id
+function editTodoApi(id) {
+    return axios(`${baseUrl}/${id}`, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' }
     }).then(res => res.data)
         .catch((error) => { throw error })
 }
 
-function* changeTodo() {
+function* editTodo({ id }) {
     try {
-        const response = yield call(editTodo);
-        yield put({ type: "PUT_TODO_SUCCESS", todos: response })
-    }
-    catch (e) {
-        yield put({ message: e.message })
+        const editData = yield call(editTodoApi, id);
+        yield put({ type: "GET_TODO_REQUEST", editData })
+    } catch (e) {
+        return e.message
     }
 }
 
-
-function updateTodo(id, title, description) {
-    return axios(`baseUrl${id}`, {
+function updateTodoApi(id, title, description) {
+    return axios(`${baseUrl}/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(id, title, description)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(title, description)
     }).then(res => res.data)
         .catch((error) => { throw error })
 }
 
-function* newTodo() {
+function* updateTodo({ title, description }) {
     try {
-        const response = yield call(updateTodo);
-        yield put({ type: "PATCH_TODO_SUCCESS", todos: response })
-    }
-    catch (e) {
-        yield put({ message: e.message })
+        const newData = yield call(updateTodoApi, title, description);
+        yield put({ type: "PATCH_TODO_REQUEST", newData })
+    } catch (e) {
+        return e.message
     }
 }
+
+
 
 export default function* watchtodoSagas() {
     yield all([
-        takeEvery("GET_TODOS_REQUEST", getTodos),
-        takeEvery("POST_TODO_REQUEST", addTodo),
-        takeEvery("DELETE_TODO_REQUEST", removeTodo),
-        takeEvery("GET_TODO_REQUEST", changeTodo),
-        takeEvery("PATCH_TODO_REQUEST", newTodo)
+        takeEvery("GET_TODOS_REQUEST", fetchTodos),
+        takeEvery("POST_TODO_REQUEST", createTodo),
+        takeEvery("DELETE_TODO_REQUEST", deleteTodo),
+        takeEvery("GET_TODO_REQUEST", editTodo),
+        takeEvery("PATCH_TODO_REQUEST", updateTodo)
     ]);
 }

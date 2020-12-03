@@ -48,7 +48,7 @@ const TodoBuilder = () => {
                 addTask={addTask}
             />
             <>
-                {loading && <div>Loading...</div>}
+                {/* {loading && <div>Loading...</div>} */}
                 {getTask.length > 0 && getTask.map(item => (
                     <TodoItem
                         key={item.id}

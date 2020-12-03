@@ -30,35 +30,17 @@ export default function todos(state = initialState, action) {
             }
             return { ...state, todo: [...state.todo, content] }
         }
-        case type.POST_TODO_SUCCESS: {
-            return { ...state, loading: false, todo: [...state.todo, action.title, action.description] }
-        }
-        case type.POST_TODO_FAILURE: {
-            return { ...state, loading: false, error: action.message }
-        }
         case type.DELETE_TODO_REQUEST: {
             const removeTodo = state.todo.filter(
                 item => item.id !== action.id)
             return { ...state, todo: removeTodo }
         }
-        case type.DELETE_TODO_SUCCESS: {
-            return { ...state, loading: false, todo: action.id }
-        }
-        case type.DELETE_TODO_FAILURE: {
-            return { ...state, loading: false, error: action.message }
-        }
-        case type.PUT_TODO_REQUEST: {
+        case type.GET_TODO_REQUEST: {
             const editTodo = state.todo.map(
                 item => item.id === action.id ? {
                     ...item, isEdit: true
                 } : item)
             return { ...state, todo: editTodo }
-        }
-        case type.PUT_TODO_SUCCESS: {
-            return { ...state, loading: false, todo: action.id }
-        }
-        case type.PUT_TODO_FAILURE: {
-            return { ...state, loading: false, error: action.message }
         }
         case type.PATCH_TODO_REQUEST: {
             const updateTodo = state.todo.map(
@@ -66,12 +48,6 @@ export default function todos(state = initialState, action) {
                     ...item, isUpdate: true, title: action.title, description: action.description
                 } : item)
             return { ...state, todo: updateTodo }
-        }
-        case type.PATCH_TODO_SUCCESS: {
-            return { ...state, loading: false, todo: [...state.todo, action.id, action.title, action.description] }
-        }
-        case type.PATCH_TODO_FAILURE: {
-            return { ...state, loading: false, error: action.message }
         }
         default:
             return state
