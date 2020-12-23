@@ -2,8 +2,7 @@ import axios from "axios";
 import { all, call, put, takeEvery } from "redux-saga/effects";
 
 
-// const baseUrl = "https://todo.eachbase.com/api/ShushanArakelian/todos";
-const baseUrl = "https://todo.eachbase.com/api/todos";
+const baseUrl = "";
 
 function fetchTodosApi() {
     return axios(baseUrl, {

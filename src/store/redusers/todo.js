@@ -28,7 +28,7 @@ export default function todos(state = initialState, action) {
                 isEdit: false,
                 isUpdate: false,
             }
-            return { ...state, todo: [...state.todo, content] }
+            return { ...state, todo: [content, ...state.todo] }
         }
         case type.DELETE_TODO_REQUEST: {
             const removeTodo = state.todo.filter(
